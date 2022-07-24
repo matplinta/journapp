@@ -1,10 +1,13 @@
-from typing import Any, List
+from typing import Any, List, Union
+import datetime
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
+from pydantic import Required
 
 from app import crud, models, schemas
 from app.api import deps
+
 
 router = APIRouter()
 
@@ -12,6 +15,9 @@ router = APIRouter()
 @router.get("/", response_model=List[schemas.Note])
 def read_notes(
     db: Session = Depends(deps.get_db),
+    tag: Union[list[str], None] = Query(default=None),
+    start_date: Union[datetime.date, None] = Query(default=None),
+    end_date: Union[datetime.date, None] = Query(default=None),
     skip: int = 0,
     limit: int = 100,
     current_user: models.User = Depends(deps.get_current_active_user),
@@ -22,9 +28,54 @@ def read_notes(
     if crud.user.is_superuser(current_user):
         notes = crud.note.get_multi(db, skip=skip, limit=limit)
     else:
-        notes = crud.note.get_multi_by_owner(
-            db=db, author_id=current_user.id, skip=skip, limit=limit
-        )
+        if tag:
+            notes = crud.note.get_multi_by_author_and_tags(
+                db=db, author_id=current_user.id, tags=tag, skip=skip, limit=limit
+            )
+        else:
+            notes = crud.note.get_multi_by_author(
+                db=db, author_id=current_user.id, skip=skip, limit=limit
+            )
+    return notes
+
+
+@router.get("/by_date", response_model=List[schemas.Note])
+def read_notes(
+    db: Session = Depends(deps.get_db),
+    start_date: datetime.date = Query(default=Required),
+    end_date: datetime.date = Query(default=Required),
+    skip: int = 0,
+    limit: int = 100,
+    current_user: models.User = Depends(deps.get_current_active_user),
+) -> Any:
+    """
+    Retrieve notes.
+    """
+    notes = crud.note.get_multi_by_author_and_dates(
+        db=db, 
+        author_id=current_user.id, 
+        start_date=start_date, 
+        end_date=end_date,
+        skip=skip, 
+        limit=limit
+    )
+    return notes
+
+
+@router.get("/by_tags", response_model=List[schemas.Note])
+def read_notes(
+    db: Session = Depends(deps.get_db),
+    tag: list[str] = Query(default=Required),
+    skip: int = 0,
+    limit: int = 100,
+    current_user: models.User = Depends(deps.get_current_active_user),
+) -> Any:
+    """
+    Retrieve notes.
+    """
+    notes = crud.note.get_multi_by_author_and_tags(
+        db=db, author_id=current_user.id, tags=tag, skip=skip, limit=limit
+    )
     return notes
 
 
@@ -38,7 +89,7 @@ def create_note(
     """
     Create new note.
     """
-    note = crud.note.create_with_owner(db=db, obj_in=note_in, author_id=current_user.id)
+    note = crud.note.create_with_author(db=db, obj_in=note_in, author_id=current_user.id)
     return note
 
 

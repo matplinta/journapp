@@ -14,17 +14,11 @@ def read_tags(
     db: Session = Depends(deps.get_db),
     skip: int = 0,
     limit: int = 100,
-    current_user: models.User = Depends(deps.get_current_active_user),
 ) -> Any:
     """
     Retrieve tags.
     """
-    if crud.user.is_superuser(current_user):
-        tags = crud.tag.get_multi(db, skip=skip, limit=limit)
-    else:
-        tags = crud.tag.get_multi_by_owner(
-            db=db, author_id=current_user.id, skip=skip, limit=limit
-        )
+    tags = crud.tag.get_multi(db, skip=skip, limit=limit)
     return tags
 
 
@@ -33,12 +27,11 @@ def create_tag(
     *,
     db: Session = Depends(deps.get_db),
     tag_in: schemas.TagCreate,
-    current_user: models.User = Depends(deps.get_current_active_user),
 ) -> Any:
     """
     Create new tag.
     """
-    tag = crud.tag.create_with_owner(db=db, obj_in=tag_in, author_id=current_user.id)
+    tag = crud.tag.create(db=db, obj_in=tag_in)
     return tag
 
 
@@ -56,8 +49,6 @@ def update_tag(
     tag = crud.tag.get(db=db, id=id)
     if not tag:
         raise HTTPException(status_code=404, detail="Tag not found")
-    if not crud.user.is_superuser(current_user) and (tag.author_id != current_user.id):
-        raise HTTPException(status_code=400, detail="Not enough permissions")
     tag = crud.tag.update(db=db, db_obj=tag, obj_in=tag_in)
     return tag
 
@@ -67,7 +58,6 @@ def read_tag(
     *,
     db: Session = Depends(deps.get_db),
     id: int,
-    current_user: models.User = Depends(deps.get_current_active_user),
 ) -> Any:
     """
     Get tag by ID.
@@ -75,8 +65,6 @@ def read_tag(
     tag = crud.tag.get(db=db, id=id)
     if not tag:
         raise HTTPException(status_code=404, detail="Tag not found")
-    if not crud.user.is_superuser(current_user) and (tag.author_id != current_user.id):
-        raise HTTPException(status_code=400, detail="Not enough permissions")
     return tag
 
 
@@ -85,7 +73,6 @@ def delete_tag(
     *,
     db: Session = Depends(deps.get_db),
     id: int,
-    current_user: models.User = Depends(deps.get_current_active_user),
 ) -> Any:
     """
     Delete an tag.
@@ -93,7 +80,5 @@ def delete_tag(
     tag = crud.tag.get(db=db, id=id)
     if not tag:
         raise HTTPException(status_code=404, detail="Tag not found")
-    if not crud.user.is_superuser(current_user) and (tag.author_id != current_user.id):
-        raise HTTPException(status_code=400, detail="Not enough permissions")
     tag = crud.tag.remove(db=db, id=id)
     return tag

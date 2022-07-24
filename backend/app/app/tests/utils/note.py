@@ -15,4 +15,4 @@ def create_random_note(db: Session, *, author_id: Optional[int] = None) -> model
     title = random_lower_string()
     description = random_lower_string()
     note_in = NoteCreate(title=title, description=description, id=id)
-    return crud.note.create_with_owner(db=db, obj_in=note_in, author_id=author_id)
+    return crud.note.create_with_author(db=db, obj_in=note_in, author_id=author_id)

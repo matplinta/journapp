@@ -7,7 +7,7 @@ from .association_note_tag import association_table
 
 class Tag(Base):
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, index=True)
+    name = Column(String, unique=True, index=True)
     notes = relationship("Note", secondary=association_table, back_populates="tags")
 
 

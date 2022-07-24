@@ -1,5 +1,5 @@
 # from __future__ import annotations
-from pydantic import BaseModel
+from pydantic import BaseModel, validator
 from typing import Union, List
 from datetime import date
 from ..models import ColorEnum
@@ -10,24 +10,24 @@ class NoteBase(BaseModel):
     contents: str
     start_date: date
     end_date: date
-    tags: List["Tag"] = []
     color: ColorEnum = ColorEnum.default
     favourite: bool = False 
 
 # Properties to receive on note creation
 class NoteCreate(NoteBase):
-    pass
+    tags: List["Tag"] = []
 
 
 # Properties to receive on note update
 class NoteUpdate(NoteBase):
-    pass
+    tags: List["Tag"] 
 
 
 # Properties shared by models stored in DB
 class NoteInDBBase(NoteBase):
     id: int
     author_id: int
+    tags: List["Tag"]
 
     class Config:
         orm_mode = True
@@ -43,15 +43,20 @@ class NoteInDB(NoteInDBBase):
     pass
 
 
+
 # Shared properties
 class TagBase(BaseModel):
     name: str
-    notes: List[Note]
+
+    @validator('name')
+    def name_must_be_lowercase(cls, v):
+        if not v.islower():
+            raise ValueError('name must be lowercase')
+        return v
 
 # Properties to receive on tag creation
 class TagCreate(TagBase):
-    notes: List[Note] = []
-
+    pass
 # Properties to receive on tag update
 class TagUpdate(TagBase):
     pass
@@ -59,7 +64,7 @@ class TagUpdate(TagBase):
 
 # Properties shared by models stored in DB
 class TagInDBBase(TagBase):
-    id: int
+    # id: int
 
     class Config:
         orm_mode = True
@@ -67,13 +72,13 @@ class TagInDBBase(TagBase):
 
 # Properties to return to client
 class Tag(TagInDBBase):
+    # notes: List[Note]
     pass
 
 
 # Properties stored in DB
 class TagInDB(TagInDBBase):
     pass
-
 
 NoteBase.update_forward_refs()
 NoteUpdate.update_forward_refs()
