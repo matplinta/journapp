@@ -13,6 +13,11 @@
         <v-btn to="/main/profile/password">Change Password</v-btn>
       </v-card-actions>
     </v-card>
+    <div class="lol">
+      <TinyEditor></TinyEditor>
+    </div>
+    <div class="headline primary--text">AWDAWDDDDoard</div>
+    <div class="headline primary--text">AWDAWDDDDoard</div>
   </v-container>
 </template>
 
@@ -20,8 +25,14 @@
 import { Component, Vue } from 'vue-property-decorator';
 import { Store } from 'vuex';
 import { readUserProfile } from '@/store/main/getters';
+import TinyEditor from '@/components/TinyEditorClass.vue';
 
-@Component
+
+@Component({
+  components: {
+    TinyEditor,
+  },
+})
 export default class Dashboard extends Vue {
   get greetedUser() {
     const userProfile = readUserProfile(this.$store);
