@@ -5,7 +5,9 @@
         <div class="headline primary--text">Dashboard</div>
       </v-card-title>
       <v-card-text>
-        <div class="headline font-weight-light ma-5">Welcome {{greetedUser}}</div>
+        <div class="headline font-weight-light ma-5">
+          <TinyEditor></TinyEditor>
+        </div>
       </v-card-text>
       <v-card-actions>
         <v-btn to="/main/profile/view">View Profile</v-btn>
@@ -13,11 +15,6 @@
         <v-btn to="/main/profile/password">Change Password</v-btn>
       </v-card-actions>
     </v-card>
-    <div class="lol">
-      <TinyEditor></TinyEditor>
-    </div>
-    <div class="headline primary--text">AWDAWDDDDoard</div>
-    <div class="headline primary--text">AWDAWDDDDoard</div>
   </v-container>
 </template>
 
@@ -34,6 +31,9 @@ import TinyEditor from '@/components/TinyEditorClass.vue';
   },
 })
 export default class Dashboard extends Vue {
+  get picker() {
+    return (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10)
+  }
   get greetedUser() {
     const userProfile = readUserProfile(this.$store);
     if (userProfile) {

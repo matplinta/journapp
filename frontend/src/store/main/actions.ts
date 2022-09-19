@@ -45,7 +45,8 @@ export const actions = {
                 commitSetUserProfile(context, response.data);
             }
         } catch (error) {
-            await dispatchCheckApiError(context, error);
+            const errorObj: AxiosError = error as AxiosError
+            await dispatchCheckApiError(context, errorObj);
         }
     },
     async actionUpdateUserProfile(context: MainContext, payload) {
@@ -54,13 +55,14 @@ export const actions = {
             commitAddNotification(context, loadingNotification);
             const response = (await Promise.all([
                 api.updateMe(context.state.token, payload),
-                await new Promise((resolve, reject) => setTimeout(() => resolve(), 500)),
+                await new Promise((resolve, reject) => setTimeout(() => resolve, 500)),
             ]))[0];
             commitSetUserProfile(context, response.data);
             commitRemoveNotification(context, loadingNotification);
             commitAddNotification(context, { content: 'Profile successfully updated', color: 'success' });
         } catch (error) {
-            await dispatchCheckApiError(context, error);
+            const errorObj: AxiosError = error as AxiosError
+            await dispatchCheckApiError(context, errorObj);
         }
     },
     async actionCheckLoggedIn(context: MainContext) {
@@ -128,7 +130,7 @@ export const actions = {
             commitAddNotification(context, loadingNotification);
             const response = (await Promise.all([
                 api.passwordRecovery(payload.username),
-                await new Promise((resolve, reject) => setTimeout(() => resolve(), 500)),
+                await new Promise((resolve, reject) => setTimeout(() => resolve, 500)),
             ]))[0];
             commitRemoveNotification(context, loadingNotification);
             commitAddNotification(context, { content: 'Password recovery email sent', color: 'success' });
@@ -144,7 +146,7 @@ export const actions = {
             commitAddNotification(context, loadingNotification);
             const response = (await Promise.all([
                 api.resetPassword(payload.password, payload.token),
-                await new Promise((resolve, reject) => setTimeout(() => resolve(), 500)),
+                await new Promise((resolve, reject) => setTimeout(() => resolve, 500)),
             ]))[0];
             commitRemoveNotification(context, loadingNotification);
             commitAddNotification(context, { content: 'Password successfully reset', color: 'success' });

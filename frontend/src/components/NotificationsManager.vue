@@ -1,8 +1,8 @@
 <template>
     <div>
-        <v-snackbar auto-height :color="currentNotificationColor" v-model="show">
+        <v-snackbar :color="currentNotificationColor" v-model="show">
             <v-progress-circular class="ma-2" indeterminate v-show="showProgress"></v-progress-circular>{{ currentNotificationContent }}
-            <v-btn flat @click.native="close">Close</v-btn>
+            <v-btn text @click.native="close">Close</v-btn>
         </v-snackbar>
     </div>
 </template>
@@ -22,7 +22,7 @@ export default class NotificationsManager extends Vue {
 
     public async hide() {
         this.show = false;
-        await new Promise((resolve, reject) => setTimeout(() => resolve(), 500));
+        await new Promise((resolve, reject) => setTimeout(() => resolve, 500));
     }
 
     public async close() {

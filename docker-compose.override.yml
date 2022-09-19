@@ -72,21 +72,21 @@ services:
         INSTALL_DEV: ${INSTALL_DEV-true}
         INSTALL_JUPYTER: ${INSTALL_JUPYTER-true}
 
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile.dev
-      args:
-        FRONTEND_ENV: dev
-    command: npm run serve
-    volumes:
-      - ./frontend/src:/app/src
-      - ./frontend/public:/app/public
-    labels:
-      - traefik.enable=true
-      - traefik.constraint-label-stack=${TRAEFIK_TAG?Variable not set}
-      - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-http.rule=PathPrefix(`/`)
-      - traefik.http.services.${STACK_NAME?Variable not set}-frontend.loadbalancer.server.port=8080
+  # frontend:
+  #   build:
+  #     context: ./frontend
+  #     dockerfile: Dockerfile.dev
+  #     args:
+  #       FRONTEND_ENV: dev
+  #   command: npm run serve
+  #   volumes:
+  #     - ./frontend/src:/app/src
+  #     - ./frontend/public:/app/public
+  #   labels:
+  #     - traefik.enable=true
+  #     - traefik.constraint-label-stack=${TRAEFIK_TAG?Variable not set}
+  #     - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-http.rule=PathPrefix(`/`)
+  #     - traefik.http.services.${STACK_NAME?Variable not set}-frontend.loadbalancer.server.port=8080
 
 networks:
   traefik-public:
