@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <v-app>
+    <v-app :style="{background: $vuetify.theme.themes[theme].background}">
       <v-main v-if="loggedIn===null">
         <v-container fill-height>
           <v-layout align-center justify-center>
@@ -32,6 +32,10 @@ import { dispatchCheckLoggedIn } from '@/store/main/actions';
   },
 })
 export default class App extends Vue {
+
+  get theme () {
+    return (this.$vuetify.theme.dark) ? 'dark' : 'light'
+  }
 
   get loggedIn() {
     return readIsLoggedIn(this.$store);

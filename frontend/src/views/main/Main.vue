@@ -11,13 +11,13 @@
       :hide-details="true"
       prepend-icon="mdi-lightbulb"
       append-icon="mdi-lightbulb-outline"
-      v-model="$vuetify.theme.dark"
+      v-model="darkThemeSet"
       ></v-switch>
       <v-btn 
       icon
-      @click="$vuetify.theme.dark = !$vuetify.theme.dark" 
+      @click="toggleTheme" 
       >
-        <v-icon v-if="$vuetify.theme.dark">mdi-lightbulb-outline</v-icon>
+        <v-icon v-if="darkThemeSet">mdi-lightbulb-outline</v-icon>
         <v-icon v-else>mdi-lightbulb</v-icon>
       </v-btn>
       <v-spacer></v-spacer>
@@ -57,25 +57,24 @@
     <v-navigation-drawer floating
     width="320" persistent v-model="showDrawer" fixed app :clipped="true">
       <v-layout column fill-height>
+        <v-date-picker 
+          class="picker-override"
+          year-icon="mdi-calendar-blank" 
+          full-width 
+          range
+          color="accent"
+          show-adjacent-months
+          first-day-of-week="1"
+          v-model="picker"
+          @change="dblClick"
+          :show-current="true"
+          :no-title="true"
+          :events="eventsFunction"
+          
+        ></v-date-picker>
         <v-list>
-          <v-list-item class="calendar_item">
-            <!-- <v-list-item-action>
-              <v-icon>mdi-calendar</v-icon>
-            </v-list-item-action> -->
-            <!-- <v-list-item-content> -->
-              <!-- <v-list-item-title>Dashboard</v-list-item-title> -->
-            
-              <v-date-picker 
-                year-icon="mdi-calendar-blank" 
-                full-width 
-                show-adjacent-months
-                first-day-of-week="1"
-                v-model="picker"
-                show-current="true"
-                :title-date-format="customTitleDate"
-              ></v-date-picker>
-            <!-- </v-list-item-content> -->
-          </v-list-item>
+          <!-- <v-list-item class="calendar_item">
+          </v-list-item> -->
           <v-subheader>Main menu</v-subheader>
           <v-list-item to="/main/dashboard">
             <v-list-item-action>
@@ -85,28 +84,12 @@
               <v-list-item-title>Dashboard</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-          <v-list-item to="/main/profile/view">
+          <v-list-item to="/main/entries">
             <v-list-item-action>
-              <v-icon>person</v-icon>
+              <v-icon>notes</v-icon>
             </v-list-item-action>
             <v-list-item-content>
-              <v-list-item-title>Profile</v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-          <v-list-item to="/main/profile/edit">
-            <v-list-item-action>
-              <v-icon>edit</v-icon>
-            </v-list-item-action>
-            <v-list-item-content>
-              <v-list-item-title>Edit Profile</v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-          <v-list-item to="/main/profile/password">
-            <v-list-item-action>
-              <v-icon>vpn_key</v-icon>
-            </v-list-item-action>
-            <v-list-item-content>
-              <v-list-item-title>Change Password</v-list-item-title>
+              <v-list-item-title>Entires</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
         </v-list>
@@ -162,7 +145,7 @@
       <v-layout column fill-height>
       </v-layout>
     </v-navigation-drawer>
-    <v-footer class="pa-3" fixed app>
+    <v-footer class="pa-1" fixed app>
       <v-spacer></v-spacer>
       <span>&copy; {{appName}}</span>
     </v-footer>
@@ -173,9 +156,13 @@
 import { Vue, Component } from 'vue-property-decorator';
 
 import { appName } from '@/env';
-import { readDashboardMiniDrawer, readDashboardShowDrawer, readHasAdminAccess } from '@/store/main/getters';
-import { commitSetDashboardShowDrawer, commitSetDashboardMiniDrawer } from '@/store/main/mutations';
+import { readDashboardShowDrawer, readHasAdminAccess, readDarkTheme, readToken } from '@/store/main/getters';
+import { commitSetDashboardShowDrawer, commitSetDarkTheme} from '@/store/main/mutations';
 import { dispatchUserLogOut } from '@/store/main/actions';
+import { api } from '@/api';
+import { commitSetCalendarEvents, commitSetSelectedDates } from '@/store/note/mutations';
+import { dispatchGetUserNotes } from '@/store/note/actions';
+import { readCalendarEvents, readNotes, readSelectedDates } from '@/store/note/getters';
 
 const routeGuardMain = async (to, from, next) => {
   if (to.path === '/main') {
@@ -188,7 +175,23 @@ const routeGuardMain = async (to, from, next) => {
 @Component
 export default class Main extends Vue {
   public appName = appName;
-  public isDarkTheme = true;
+
+
+  get calendarEntries() {
+    return readCalendarEvents(this.$store)
+  }
+
+  set calendarEntries(value: string[]) {
+    commitSetCalendarEvents(this.$store, value)
+  }
+
+  get picker(){
+    return readSelectedDates(this.$store)
+  }
+
+  set picker(value) {
+    commitSetSelectedDates(this.$store, value)
+  }
 
   public beforeRouteEnter(to, from, next) {
     routeGuardMain(to, from, next);
@@ -200,14 +203,6 @@ export default class Main extends Vue {
 
   public customTitleDate(date) {
     return date.toString()
-  }
-
-  get picker() {
-    return (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10)
-  }
-
-  get miniDrawer() {
-    return readDashboardMiniDrawer(this.$store);
   }
 
   get showDrawer() {
@@ -225,11 +220,22 @@ export default class Main extends Vue {
     );
   }
 
-  public switchMiniDrawer() {
-    commitSetDashboardMiniDrawer(
+  get darkThemeSet() {
+    return readDarkTheme(this.$store);
+  }
+
+  set darkThemeSet(value) {
+    commitSetDarkTheme(this.$store, value);
+    this.$vuetify.theme.dark = value;
+  }
+
+  public toggleTheme() {
+    let toggledDarkThemeValue = !readDarkTheme(this.$store);
+    commitSetDarkTheme(
       this.$store,
-      !readDashboardMiniDrawer(this.$store),
-    );
+      toggledDarkThemeValue
+    )
+    this.$vuetify.theme.dark = toggledDarkThemeValue
   }
 
   public get hasAdminAccess() {
@@ -239,6 +245,52 @@ export default class Main extends Vue {
   public async logout() {
     await dispatchUserLogOut(this.$store);
   }
+
+  public async dblClick (date) {
+        alert(`You have just double clicked the following date: ${date}`)
+  }
+
+  public async setCalendarEvents(){
+    const entriesListed = readNotes(this.$store)
+    const datesSet = new Set()
+    for (const entry of entriesListed) {
+      datesSet.add(entry.start_date)
+    }
+    console.log(datesSet)
+    this.calendarEntries = Array.from(datesSet) as string[]
+  }
+
+  public getEventColor(color: string){
+    if (color === 'pear') return 'pink lighten-1'
+    else if (color === 'banana') return 'yellow'
+    else return 'accent'
+  }
+
+  public eventsFunction(date) {
+    const entriesListed = readNotes(this.$store)
+    const colors: string[] = [];
+    for (const entry of entriesListed) {
+      var start = new Date(entry.start_date)
+      var end = new Date(entry.end_date)
+      var _date = new Date(date)
+      if (start <=_date && _date <= end ) {
+        colors.push(this.getEventColor(entry.color))
+      }
+    }
+    return colors
+  }
+
+  public async mounted() {
+    this.picker = [
+    (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10), 
+    (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10)
+  ]
+    // commitSetSelectedDates(this.$store, this.picker)
+    await dispatchGetUserNotes(this.$store)
+    await this.setCalendarEvents()
+  }
+
+
 }
 </script>
 <style>
@@ -248,4 +300,11 @@ export default class Main extends Vue {
 /* .v-navigation-drawer__border {
   width: 0px;
 } */
+.v-navigation-drawer{
+  background-color: var(--v-background-base) !important;
+} 
+.theme--dark.v-card, .theme--dark.v-picker__body {
+  background-color: inherit !important;
+}
+
 </style>

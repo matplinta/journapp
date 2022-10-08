@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-snackbar :color="currentNotificationColor" v-model="show">
+        <v-snackbar :color="currentNotificationColor" v-model="show" right top>
             <v-progress-circular class="ma-2" indeterminate v-show="showProgress"></v-progress-circular>{{ currentNotificationContent }}
             <v-btn text @click.native="close">Close</v-btn>
         </v-snackbar>

@@ -12,6 +12,7 @@ import {
     commitSetLogInError,
     commitSetToken,
     commitSetUserProfile,
+    commitToggleTheme,
 } from './mutations';
 import { AppNotification, MainState } from './state';
 
@@ -156,6 +157,9 @@ export const actions = {
             commitAddNotification(context, { color: 'error', content: 'Error resetting password' });
         }
     },
+    async actionToggleTheme(context: MainContext) {
+        commitToggleTheme(context)
+    },
 };
 
 const { dispatch } = getStoreAccessors<MainState | any, State>('');
@@ -173,3 +177,4 @@ export const dispatchUpdateUserProfile = dispatch(actions.actionUpdateUserProfil
 export const dispatchRemoveNotification = dispatch(actions.removeNotification);
 export const dispatchPasswordRecovery = dispatch(actions.passwordRecovery);
 export const dispatchResetPassword = dispatch(actions.resetPassword);
+export const dispatchToggleTheme = dispatch(actions.actionToggleTheme);

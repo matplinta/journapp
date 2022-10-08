@@ -1,6 +1,8 @@
+import { INoteUpdate, INotePartialUpdate } from './interfaces/index';
 import axios from 'axios';
 import { apiUrl } from '@/env';
-import { IUserProfile, IUserProfileUpdate, IUserProfileCreate } from './interfaces';
+import { IUserProfile, IUserProfileUpdate, IUserProfileCreate, INoteCreate, INoteListed } from './interfaces';
+import { convertToString } from '@/utils';
 
 function authHeaders(token: string) {
   return {
@@ -42,4 +44,26 @@ export const api = {
       token,
     });
   },
+  async createNote(token: string, data: INoteCreate) {
+    return axios.post(`${apiUrl}/api/v1/notes/`, data, authHeaders(token));
+  },
+  async updateNote(token: string, noteId: number, data: INoteUpdate) {
+    return axios.put(`${apiUrl}/api/v1/notes/${noteId}`, data, authHeaders(token));
+  },
+  async partialUpdateNote(token: string, noteId: number, data: INotePartialUpdate) {
+    return axios.patch(`${apiUrl}/api/v1/notes/${noteId}`, data, authHeaders(token));
+  },
+  async getUserNotesListedByYear(token: string, year: number) {
+    const firstDay = new Date(year, 0, 1);
+    const lastDay = new Date(year, 11, 31);
+
+    const params = new URLSearchParams();
+    params.append('start_date', convertToString(firstDay));
+    params.append('end_date', convertToString(lastDay));
+
+    console.log({...authHeaders(token), params: params})
+    return axios.get<INoteListed[]>(`${apiUrl}/api/v1/notes/listing/by_date/`, {...authHeaders(token), params: params});
+  },
+
+  
 };

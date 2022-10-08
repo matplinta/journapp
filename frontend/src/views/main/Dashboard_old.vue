@@ -6,7 +6,7 @@
       </v-card-title>
       <v-card-text>
         <div class="headline font-weight-light ma-5">
-          <editor class="input" :key="editorTheme" :api-key="tinyMCEApiKey" :init="tinyMCEOptions" v-model="noteContents" inline />
+          <TinyEditor :value="noteContents"></TinyEditor>
         </div>
       </v-card-text>
       <v-card-actions>
@@ -19,37 +19,23 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import { Store } from 'vuex';
-import { readUserProfile, readDarkTheme } from '@/store/main/getters';
-import Editor from '@tinymce/tinymce-vue'
+import { readUserProfile } from '@/store/main/getters';
+import TinyEditor from '@/components/TinyEditorClass.vue';
 import { INoteCreate } from '@/interfaces';
 import { dispatchCreateNote } from '@/store/admin/actions';
-import { tinyMCEOptions, tinyMCEApiKey } from '@/env';
 
 
 @Component({
   components: {
-    Editor,
+    TinyEditor,
   },
 })
 export default class Dashboard extends Vue {
-  public noteContents = "Let's start writing todays notes..."
-  public editorTheme = 'light'
-  public tinyMCEApiKey = tinyMCEApiKey
-
-  // public mounted() {
-  //   this.value = 'awd'
-  // };
-
-  get tinyMCEOptions () {
-    let tinyOptions = tinyMCEOptions
-    let theme = readDarkTheme(this.$store) ? 'dark' : 'light'
-    tinyOptions.skin = theme === 'dark' ? 'oxide-dark' : 'oxide'
-    // this.tinyMCEOptions.content_css = theme === 'dark' ? 'dark' : 'default'
-    this.editorTheme = theme
-    return tinyOptions
-
-  }
+  public noteContents = "awddddddd"
   
+  get picker() {
+    return (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10)
+  }
   get greetedUser() {
     const userProfile = readUserProfile(this.$store);
     if (userProfile) {

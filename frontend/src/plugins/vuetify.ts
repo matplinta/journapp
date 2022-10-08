@@ -9,14 +9,17 @@ export default new Vuetify({
     iconfont: 'mdi',
   },
   theme: {
+    options: { customProperties: true },
     themes: {
       light: {
         primary: colors.indigo.base,
-        secondary: colors.indigo.darken2,
+        secondary: colors.purple.accent2,
         accent: colors.green.accent2,
       },
       dark: {
         // primary: colors.indigo.lighten2
+        secondary: colors.purple.accent2,
+        background: colors.grey.darken4
       }
     },
   },
