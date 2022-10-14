@@ -35,6 +35,7 @@
         <v-btn
           text
           color="deep-purple accent-4"
+          @click="routeToEntryPage(entry)"
         >
           Open
         </v-btn>
@@ -47,7 +48,7 @@
 import { Component, Vue } from 'vue-property-decorator';
 import { Store } from 'vuex';
 import { dispatchUpdateNote, actionPartialUpdateNote } from '@/store/note/actions';
-import { commitSetNote, commitSetNotes } from '@/store/note/mutations';
+import { commitSetNote, commitSetNotes, commitSetSelectedDates } from '@/store/note/mutations';
 import { readNotes } from '@/store/note/getters';
 import { readUserProfile } from '@/store/main/getters';
 import { INoteListed, INotePartialUpdate } from '@/interfaces';
@@ -69,6 +70,12 @@ export default class Entries extends Vue {
         return userProfile.email;
       }
     }
+  }
+
+  public async routeToEntryPage (entry) {
+    commitSetSelectedDates(this.$store, [entry.start_date, entry.end_date])
+    this.$router.push({name: 'entry', params: { id: entry.id as any}})
+    
   }
 
   public async toggleFavouriteEntry(note: INoteListed) {

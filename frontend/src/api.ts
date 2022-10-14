@@ -1,4 +1,4 @@
-import { INoteUpdate, INotePartialUpdate } from './interfaces/index';
+import { INoteUpdate, INotePartialUpdate, INote } from './interfaces/index';
 import axios from 'axios';
 import { apiUrl } from '@/env';
 import { IUserProfile, IUserProfileUpdate, IUserProfileCreate, INoteCreate, INoteListed } from './interfaces';
@@ -43,6 +43,12 @@ export const api = {
       new_password: password,
       token,
     });
+  },
+  async getNote(token: string, noteId: number) {
+    return axios.get<INote>(`${apiUrl}/api/v1/notes/${noteId}`, authHeaders(token));
+  },
+  async deleteNote(token: string, noteId: number) {
+    return axios.delete(`${apiUrl}/api/v1/notes/${noteId}`, authHeaders(token));
   },
   async createNote(token: string, data: INoteCreate) {
     return axios.post(`${apiUrl}/api/v1/notes/`, data, authHeaders(token));

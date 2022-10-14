@@ -7,24 +7,24 @@
       <v-app-bar-nav-icon @click.stop="switchShowDrawer"></v-app-bar-nav-icon>
       <v-toolbar-title v-text="appName"></v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-switch dark color="white"
+      <!-- <v-switch dark color="white"
       :hide-details="true"
       prepend-icon="mdi-lightbulb"
       append-icon="mdi-lightbulb-outline"
       v-model="darkThemeSet"
-      ></v-switch>
+      ></v-switch> -->
       <v-btn 
+      class="mx-2"
       icon
       @click="toggleTheme" 
       >
         <v-icon v-if="darkThemeSet">mdi-lightbulb-outline</v-icon>
         <v-icon v-else>mdi-lightbulb</v-icon>
       </v-btn>
-      <v-spacer></v-spacer>
-      
       <v-menu bottom left offset-y>
         <template v-slot:activator="{ on }">
           <v-btn 
+          class="mr-0"
           v-on="on" 
           icon>
           <v-avatar color="accent">
@@ -58,6 +58,7 @@
     width="320" persistent v-model="showDrawer" fixed app :clipped="true">
       <v-layout column fill-height>
         <v-date-picker 
+          id="pickerId"
           class="picker-override"
           year-icon="mdi-calendar-blank" 
           full-width 
@@ -66,7 +67,7 @@
           show-adjacent-months
           first-day-of-week="1"
           v-model="picker"
-          @change="dblClick"
+          @change="routeToEntryPage"
           :show-current="true"
           :no-title="true"
           :events="eventsFunction"
@@ -76,20 +77,12 @@
           <!-- <v-list-item class="calendar_item">
           </v-list-item> -->
           <v-subheader>Main menu</v-subheader>
-          <v-list-item to="/main/dashboard">
-            <v-list-item-action>
-              <v-icon>web</v-icon>
-            </v-list-item-action>
-            <v-list-item-content>
-              <v-list-item-title>Dashboard</v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
           <v-list-item to="/main/entries">
             <v-list-item-action>
               <v-icon>notes</v-icon>
             </v-list-item-action>
             <v-list-item-content>
-              <v-list-item-title>Entires</v-list-item-title>
+              <v-list-item-title>All entries</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
         </v-list>
@@ -163,10 +156,11 @@ import { api } from '@/api';
 import { commitSetCalendarEvents, commitSetSelectedDates } from '@/store/note/mutations';
 import { dispatchGetUserNotes } from '@/store/note/actions';
 import { readCalendarEvents, readNotes, readSelectedDates } from '@/store/note/getters';
+import { INoteListed } from '@/interfaces';
 
 const routeGuardMain = async (to, from, next) => {
   if (to.path === '/main') {
-    next('/main/dashboard');
+    next('/main/entries');
   } else {
     next();
   }
@@ -175,15 +169,6 @@ const routeGuardMain = async (to, from, next) => {
 @Component
 export default class Main extends Vue {
   public appName = appName;
-
-
-  get calendarEntries() {
-    return readCalendarEvents(this.$store)
-  }
-
-  set calendarEntries(value: string[]) {
-    commitSetCalendarEvents(this.$store, value)
-  }
 
   get picker(){
     return readSelectedDates(this.$store)
@@ -246,18 +231,22 @@ export default class Main extends Vue {
     await dispatchUserLogOut(this.$store);
   }
 
-  public async dblClick (date) {
-        alert(`You have just double clicked the following date: ${date}`)
-  }
-
-  public async setCalendarEvents(){
+  public async routeToEntryPage (dates: string[]) {
+    commitSetSelectedDates(this.$store, dates)
     const entriesListed = readNotes(this.$store)
-    const datesSet = new Set()
-    for (const entry of entriesListed) {
-      datesSet.add(entry.start_date)
+    const note: INoteListed | undefined = entriesListed.find(entry => {
+      return entry.start_date === dates[0] && entry.end_date === dates[1]
+    })
+    if (note !== undefined) {
+      console.log("shoud go")
+      this.$router.push({name: 'entry', params: { id: note.id as any}})
     }
-    console.log(datesSet)
-    this.calendarEntries = Array.from(datesSet) as string[]
+    else {
+      this.$router.push({name: 'new_entry'}).catch(error => {
+        if (error.name != "NavigationDuplicated") {
+          throw error;
+        }});
+    }
   }
 
   public getEventColor(color: string){
@@ -285,9 +274,8 @@ export default class Main extends Vue {
     (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10), 
     (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10)
   ]
-    // commitSetSelectedDates(this.$store, this.picker)
     await dispatchGetUserNotes(this.$store)
-    await this.setCalendarEvents()
+    // await this.setCalendarEvents()
   }
 
 
@@ -303,8 +291,9 @@ export default class Main extends Vue {
 .v-navigation-drawer{
   background-color: var(--v-background-base) !important;
 } 
-.theme--dark.v-card, .theme--dark.v-picker__body {
+#pickerId, .theme--dark.v-picker__body {
   background-color: inherit !important;
 }
+
 
 </style>

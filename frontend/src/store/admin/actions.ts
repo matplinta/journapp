@@ -55,29 +55,11 @@ export const actions = {
             const errorObj: AxiosError = error as AxiosError
             await dispatchCheckApiError(context, errorObj);
         }
-    },
-
-    async actionCreateNote(context: MainContext, payload: INoteCreate) {
-        try {
-            const loadingNotification = { content: 'saving', showProgress: true };
-            commitAddNotification(context, loadingNotification);
-            const response = (await Promise.all([
-                api.createNote(context.rootState.main.token, payload),
-                await new Promise((resolve, reject) => setTimeout(() => resolve, 500)),
-            ]))[0];
-            commitSetUser(context, response.data);
-            commitRemoveNotification(context, loadingNotification);
-            commitAddNotification(context, { content: 'Note successfully created', color: 'success' });
-        } catch (error) {
-            const errorObj: AxiosError = error as AxiosError
-            await dispatchCheckApiError(context, errorObj);
-        }
-    },
+    }
 };
 
 const { dispatch } = getStoreAccessors<AdminState, State>('');
 
-export const dispatchCreateNote = dispatch(actions.actionCreateNote);
 export const dispatchCreateUser = dispatch(actions.actionCreateUser);
 export const dispatchGetUsers = dispatch(actions.actionGetUsers);
 export const dispatchUpdateUser = dispatch(actions.actionUpdateUser);

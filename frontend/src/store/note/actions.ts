@@ -30,12 +30,24 @@ export const actions = {
         try {
             const loadingNotification = { content: 'saving', showProgress: true };
             commitAddNotification(context, loadingNotification);
-            const response = (await Promise.all([
-                api.createNote(context.rootState.main.token, payload),
-                await new Promise((resolve, reject) => setTimeout(() => resolve, 500)),
-            ]))[0];
+            const response = await api.createNote(context.rootState.main.token, payload)
             commitRemoveNotification(context, loadingNotification);
             commitAddNotification(context, { content: 'Note successfully created', color: 'success' });
+            return response
+        } catch (error) {
+            const _error: AxiosError = error as AxiosError
+            await dispatchCheckApiError(context, _error);
+        }
+    },
+
+    async actionDeleteNote(context: MainContext, payload: {id: number}) {
+        try {
+            const loadingNotification = { content: 'deleting', showProgress: true };
+            commitAddNotification(context, loadingNotification);
+            const response = await api.deleteNote(context.rootState.main.token, payload.id)
+            commitRemoveNotification(context, loadingNotification);
+            commitAddNotification(context, { content: 'Note successfully deleted', color: 'success' });
+            return response
         } catch (error) {
             const _error: AxiosError = error as AxiosError
             await dispatchCheckApiError(context, _error);
@@ -46,11 +58,7 @@ export const actions = {
         try {
             const loadingNotification = { content: 'saving', showProgress: true };
             commitAddNotification(context, loadingNotification);
-            const response = (await Promise.all([
-                api.updateNote(context.rootState.main.token, payload.id, payload.note),
-                await new Promise((resolve, reject) => setTimeout(() => resolve, 500)),
-            ]))[0];
-            // commitSetUser(context, response.data);
+            const response = await api.updateNote(context.rootState.main.token, payload.id, payload.note);
             commitRemoveNotification(context, loadingNotification);
             commitAddNotification(context, { content: 'Entry successfully updated', color: 'success' });
         } catch (error) {
@@ -86,4 +94,5 @@ const { dispatch } = getStoreAccessors<NoteState, State>('');
 export const dispatchGetUserNotes = dispatch(actions.actionGetUserNotes);
 export const dispatchCreateNote = dispatch(actions.actionCreateNote);
 export const dispatchUpdateNote = dispatch(actions.actionUpdateNote);
+export const dispatchDeleteNote = dispatch(actions.actionDeleteNote);
 export const actionPartialUpdateNote = dispatch(actions.actionPartialUpdateNote);

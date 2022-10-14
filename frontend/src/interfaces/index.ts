@@ -32,7 +32,7 @@ export interface INoteCreate {
     contents: string;
     start_date: string;
     end_date: string;
-    color?: number;
+    color?: string;
     favourite?: boolean;
     tags?: ITag[];
 }
@@ -65,6 +65,18 @@ export interface INoteListed {
     favourite: boolean;
     id: number;
     author_id: number;
+    tags: ITag[];
+}
+
+export interface INote {
+    title: string | null;
+    start_date: string;
+    end_date: string;
+    contents: string; 
+    color: string;
+    favourite: boolean;
+    id: number | null;
+    author_id: number | null;
     tags: ITag[];
 }
 

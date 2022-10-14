@@ -13,7 +13,7 @@ export default new Vuetify({
     themes: {
       light: {
         primary: colors.indigo.base,
-        secondary: colors.purple.accent2,
+        secondary: colors.pink.accent2,
         accent: colors.green.accent2,
       },
       dark: {
