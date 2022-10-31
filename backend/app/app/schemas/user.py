@@ -8,7 +8,7 @@ class UserBase(BaseModel):
     is_active: Union[bool, None] = True
     is_superuser: bool = False
     full_name: Union[str, None] = None
-    notes: List[Note] = []
+    # notes: List[Note] = []
 
 
 # Properties to receive via API on creation

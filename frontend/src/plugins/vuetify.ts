@@ -15,11 +15,13 @@ export default new Vuetify({
         primary: colors.indigo.base,
         secondary: colors.pink.accent2,
         accent: colors.green.accent2,
+        background: colors.grey.lighten3
       },
       dark: {
         // primary: colors.indigo.lighten2
         secondary: colors.purple.accent2,
-        background: colors.grey.darken4
+        // background: '#000000'
+        background: '#333333'
       }
     },
   },

@@ -8,11 +8,11 @@
       <v-btn color="primary" to="/main/admin/users/create">Create User</v-btn>
     </v-toolbar>
     <v-data-table :headers="headers" :items="users">
-      <template slot="items" slot-scope="props">
+      <!-- <template v-slot:default="props">
         <td>{{ props.item.name }}</td>
         <td>{{ props.item.email }}</td>
         <td>{{ props.item.full_name }}</td>
-        <td><v-icon v-if="props.item.is_active">checkmark</v-icon></td>
+        <td><v-icon v-if="props.item.is_active">mdi-cancel</v-icon></td>
         <td><v-icon v-if="props.item.is_superuser">checkmark</v-icon></td>
         <td class="justify-center layout px-0">
           <v-tooltip top>
@@ -22,6 +22,29 @@
             </v-btn>
           </v-tooltip>
         </td>
+      </template> -->
+      <template v-slot:item.isActive="{ item }">
+        <v-simple-checkbox
+          v-model="item.is_active"
+          disabled
+        ></v-simple-checkbox>
+      </template>
+      <template v-slot:item.isSuperuser="{ item }">
+        <v-simple-checkbox
+          v-model="item.is_superuser"
+          disabled
+        ></v-simple-checkbox>
+      </template>
+      <template v-slot:item.actions="{ item }">
+        <v-btn slot="activator" text :to="{name: 'main-admin-users-edit', params: {id: item.id}}">
+          <v-icon>edit</v-icon>
+        </v-btn>
+        <v-btn 
+        text
+        color="red"
+        @click="removeUser(item.id)">
+          <v-icon>delete</v-icon>
+        </v-btn>
       </template>
     </v-data-table>
   </div>
@@ -32,7 +55,7 @@ import { Component, Vue } from 'vue-property-decorator';
 import { Store } from 'vuex';
 import { IUserProfile } from '@/interfaces';
 import { readAdminUsers } from '@/store/admin/getters';
-import { dispatchGetUsers } from '@/store/admin/actions';
+import { dispatchGetUsers, dispatchDeleteUser } from '@/store/admin/actions';
 
 @Component
 export default class AdminUsers extends Vue {
@@ -69,7 +92,7 @@ export default class AdminUsers extends Vue {
     },
     {
       text: 'Actions',
-      value: 'id',
+      value: 'actions',
     },
   ];
   get users() {
@@ -77,6 +100,11 @@ export default class AdminUsers extends Vue {
   }
 
   public async mounted() {
+    await dispatchGetUsers(this.$store);
+  }
+
+  async removeUser(id: number){
+    dispatchDeleteUser(this.$store, id);
     await dispatchGetUsers(this.$store);
   }
 }

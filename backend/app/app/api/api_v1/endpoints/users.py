@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 from app import crud, models, schemas
 from app.api import deps
 from app.core.config import settings
-from app.utils import send_new_account_email
+from app.utils import send_new_account_email, send_test_email
 
 router = APIRouter()
 
@@ -23,8 +23,18 @@ def read_users(
     """
     Retrieve users.
     """
+    if not crud.user.is_superuser(current_user):
+        raise HTTPException(
+            status_code=400, detail="The user doesn't have enough privileges"
+        )
     users = crud.user.get_multi(db, skip=skip, limit=limit)
     return users
+
+
+@router.get("/testmail")
+def sendtestmail():
+    send_test_email("mateusz.plinta@yahoo.com")
+    return None
 
 
 @router.post("/", response_model=schemas.User)
@@ -150,4 +160,22 @@ def update_user(
             detail="The user with this username does not exist in the system",
         )
     user = crud.user.update(db, db_obj=user, obj_in=user_in)
+    return user
+
+
+@router.delete("/{user_id}", response_model=schemas.User)
+def update_user(
+    *,
+    db: Session = Depends(deps.get_db),
+    user_id: int,
+    current_user: models.User = Depends(deps.get_current_active_superuser),
+) -> Any:
+    """
+    Delete a user.
+    """
+    if not crud.user.is_superuser(current_user):
+        raise HTTPException(
+            status_code=400, detail="The user doesn't have enough privileges"
+        )
+    user = crud.user.remove(db, id=user_id)
     return user

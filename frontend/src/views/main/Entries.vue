@@ -1,7 +1,7 @@
 <template>
   <v-container fluid>
     <v-card
-    class="ma-3 pa-3"
+    class="ma-4 pa-3"
     v-for="entry in entries" :key="entry.id" 
     >
     <v-card-text>
@@ -10,15 +10,23 @@
       <p class="text-h4 text--primary">
         {{entry.title}}
       </p>
-      <div v-for="tag in entry.tags" class="text--primary">
+      <v-chip 
+      v-for="tag in entry.tags" 
+      :key="tag.name"
+      class="mr-2"
+      dark
+      color="secondary"
+      ripple
+      >
         {{tag.name}}
-      </div>
+      </v-chip>
       </v-card-text>
       <v-card-actions>
         <v-btn
-          text
+          width="50%"
+          depressed
           @click="toggleFavouriteEntry(entry)"
-        >
+        > 
         <v-icon
           v-if="!entry.favourite"
           color="grey lighten-1"
@@ -31,9 +39,12 @@
         >
           mdi-star
         </v-icon>
+          Favourite
         </v-btn>
         <v-btn
-          text
+          dark
+          depressed
+          width="50%"
           color="deep-purple accent-4"
           @click="routeToEntryPage(entry)"
         >

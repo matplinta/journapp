@@ -54,8 +54,14 @@
           </v-list>
       </v-menu>
     </v-app-bar>
-    <v-navigation-drawer floating
-    width="320" persistent v-model="showDrawer" fixed app :clipped="true">
+    <v-navigation-drawer 
+    floating
+    width="320" 
+    persistent 
+    v-model="showDrawer" 
+    fixed 
+    app 
+    :clipped="true">
       <v-layout column fill-height>
         <v-date-picker 
           id="pickerId"
@@ -120,11 +126,13 @@
       </v-layout>
     </v-navigation-drawer>
     
-    <v-main>
+    <v-main
+    class="background">
       <router-view></router-view>
     </v-main>
 
     <v-navigation-drawer 
+    class="background"
     floating
     width="320" 
     persistent 
@@ -148,7 +156,7 @@
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
 
-import { appName } from '@/env';
+import { appName, eventColors } from '@/env';
 import { readDashboardShowDrawer, readHasAdminAccess, readDarkTheme, readToken } from '@/store/main/getters';
 import { commitSetDashboardShowDrawer, commitSetDarkTheme} from '@/store/main/mutations';
 import { dispatchUserLogOut } from '@/store/main/actions';
@@ -255,6 +263,11 @@ export default class Main extends Vue {
     else return 'accent'
   }
 
+  public getEventColorBasedOnId(event: INoteListed){
+    let colorIdx = event.id % eventColors.length
+    return eventColors[colorIdx]
+  }
+
   public eventsFunction(date) {
     const entriesListed = readNotes(this.$store)
     const colors: string[] = [];
@@ -263,7 +276,7 @@ export default class Main extends Vue {
       var end = new Date(entry.end_date)
       var _date = new Date(date)
       if (start <=_date && _date <= end ) {
-        colors.push(this.getEventColor(entry.color))
+        colors.push(this.getEventColorBasedOnId(entry))
       }
     }
     return colors
@@ -285,15 +298,18 @@ export default class Main extends Vue {
 .calendar_item {
   padding: 0  
 }
-/* .v-navigation-drawer__border {
-  width: 0px;
-} */
-.v-navigation-drawer{
+/* .v-navigation-drawer{
   background-color: var(--v-background-base) !important;
-} 
-#pickerId, .theme--dark.v-picker__body {
+}  */
+.theme--dark.v-navigation-drawer{
+  background-color: var(--v-background-base) !important;
+}
+#pickerId, .theme--dark.v-picker__body{
   background-color: inherit !important;
 }
+/* #pickerId, .theme--light.v-picker__body{
+  background-color: inherit !important;
+} */
 
 
 </style>

@@ -5,25 +5,24 @@
         <v-flex xs12 sm8 md4>
           <v-card class="elevation-12">
             <v-toolbar dark color="primary">
-              <v-toolbar-title>{{appName}}</v-toolbar-title>
+              <v-toolbar-title>{{appName}} - create account</v-toolbar-title>
               <v-spacer></v-spacer>
             </v-toolbar>
             <v-card-text>
               <v-form @keyup.enter="submit">
-                <v-text-field @keyup.enter="submit" v-model="email" prepend-icon="person" name="login" label="Login" type="text"></v-text-field>
+                <v-text-field @keyup.enter="submit" v-model="username" prepend-icon="person" name="username" label="Username" type="text"></v-text-field>
+                <v-text-field @keyup.enter="submit" v-model="email" prepend-icon="email" name="email" label="Email" type="text"></v-text-field>
                 <v-text-field @keyup.enter="submit" v-model="password" prepend-icon="lock" name="password" label="Password" id="password" type="password"></v-text-field>
               </v-form>
-              <div v-if="loginError">
-                <v-alert :value="loginError" transition="fade-transition" type="error">
+              <div v-if="registerError">
+                <v-alert :value="registerError" transition="fade-transition" type="error">
                   Incorrect email or password
                 </v-alert>
               </div>
-              <v-flex class="caption text-xs-right"><router-link to="/recover-password">Forgot your password?</router-link></v-flex>
-              <v-flex class="caption text-xs-right"><router-link to="/register">Don't have an account? Register here</router-link></v-flex>
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn @click.prevent="submit">Login</v-btn>
+              <v-btn @click.prevent="submit">Create account</v-btn>
             </v-card-actions>
           </v-card>
         </v-flex>
@@ -40,17 +39,18 @@ import { readLoginError } from '@/store/main/getters';
 import { dispatchLogIn } from '@/store/main/actions';
 
 @Component
-export default class Login extends Vue {
+export default class Register extends Vue {
+  public username: string = '';
   public email: string = '';
   public password: string = '';
   public appName = appName;
 
-  public get loginError() {
+  public get registerError() {
     return readLoginError(this.$store);
   }
 
   public submit() {
-    dispatchLogIn(this.$store, {username: this.email, password: this.password});
+    dispatchRegister(this.$store, {username: this.email, password: this.password});
   }
 }
 </script>

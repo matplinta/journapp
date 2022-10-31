@@ -30,6 +30,7 @@ def send_email(
     if settings.SMTP_PASSWORD:
         smtp_options["password"] = settings.SMTP_PASSWORD
     response = message.send(to=email_to, render=environment, smtp=smtp_options)
+    logging.info(f"smtp options: {smtp_options}")
     logging.info(f"send email result: {response}")
 
 
@@ -38,6 +39,7 @@ def send_test_email(email_to: str) -> None:
     subject = f"{project_name} - Test email"
     with open(Path(settings.EMAIL_TEMPLATES_DIR) / "test_email.html") as f:
         template_str = f.read()
+    logging.info("SEND TEST EMAIL")
     send_email(
         email_to=email_to,
         subject_template=subject,

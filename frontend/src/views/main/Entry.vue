@@ -1,24 +1,50 @@
 <template>
   <v-container fluid>
     <v-card 
-    class=" pa-3"
+    class="pa-3 ma-4"
     min-height="45rem"
     >
-      <!-- <v-card-title primary-title>
-      </v-card-title> -->
       <v-card-text>
         <div class="d-flex flex-row mb-6">
-          <div class="date_container accent text-center rounded-lg py-1 px-4">
-            <span class="accent--text text--darken-3 font-weight-regular subtitle-1">
+          <v-chip
+            class="dateRangeTag py-5"
+            color="accent"
+            text-color="accent darken-4"
+            label
+            ripple>
+            <v-icon left>
+              mdi-calendar-range
+            </v-icon>
               {{date_range}}
-            </span>
-          </div>
+            </v-chip>
           <v-spacer></v-spacer>
-          <div v-for="tag in note.tags" class="date_container secondary lighten-3 text-center rounded-lg py-1 px-4">
-            <span class="secondary--text text--darken-2 font-weight-regular subtitle-1">
-              {{tag.name}}
-            </span>
-          </div>
+          <v-combobox
+            v-model="tagsStrings"
+            clearable
+            chips
+            multiple
+            prepend-inner-icon="mdi-label"
+            outlined
+            placeholder="Note tags..."
+            label="Note tags..."
+            color="secondary"
+            dense
+          >
+            <template v-slot:selection="{ attrs, item, select, selected }">
+              <v-chip
+                v-bind="attrs"
+                :input-value="selected"
+                close
+                dark
+                color="secondary"
+                @click="select"
+                @click:close="removeTag(item)"
+               
+              >
+                <strong>{{ item }}</strong>&nbsp;
+              </v-chip>
+            </template>
+          </v-combobox>
           <v-spacer></v-spacer>
           <div class="px-4">
             <!-- <v-btn 
@@ -33,11 +59,14 @@
             >
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
-                  outlined
-                  color="secondary"
+                  text
+                  color="red"
                   v-bind="attrs"
                   v-on="on"
                 >
+                <v-icon left>
+                  mdi-trash-can-outline
+                </v-icon>
                   Delete
                 </v-btn>
               </template>
@@ -70,11 +99,15 @@
           <div>
             <v-btn 
             @click="save"
-            color="secondary"
+            color="green"
+            dark
+            text
+            depressed
             >Save</v-btn>
           </div>
         </div>
         <v-text-field
+          class="titleTextField"
           v-model="note.title"
         ></v-text-field>
         <div class="headline editorDiv">
@@ -93,11 +126,12 @@ import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 import { Store } from 'vuex';
 import { readUserProfile, readDarkTheme, readToken } from '@/store/main/getters';
 import Editor from '@tinymce/tinymce-vue'
-import { INote } from '@/interfaces';
+import { INote, ITag } from '@/interfaces';
 import { tinyMCEOptions, tinyMCEApiKey } from '@/env';
 import { readSelectedDates } from '@/store/note/getters';
 import { api } from '@/api'
 import { dispatchDeleteNote, dispatchGetUserNotes, dispatchUpdateNote } from '@/store/note/actions';
+import { noteModule } from '@/store/note';
 
 
 @Component({
@@ -148,6 +182,24 @@ export default class Entry extends Vue {
   //   }
   // } 
 
+  public async removeTag(name: string) {
+    let tagIdx = this.note.tags.findIndex(object => {
+      return object.name === name
+    })
+    this.note.tags.splice(tagIdx, 1)
+
+  }
+
+  get tagsStrings() {
+    return this.note.tags.map(({ name }) => name);
+  }
+
+  set tagsStrings(tags: string[]) {
+    let uniqTags = Array.from(new Set(tags))
+    let newTags: ITag[] = uniqTags.map((name) => ({"name": name.toLowerCase()} as ITag))
+    this.note.tags = newTags
+  }
+
   get date_range() {
     return `${this.note?.start_date.replaceAll('-', '/')} - ${this.note?.end_date.replaceAll('-', '/')}`
   }
@@ -193,7 +245,7 @@ export default class Entry extends Vue {
 }
 </script>
 <style>
- .v-text-field input{
+ .titleTextField input{
       font-size: 2.5rem;
       line-height: 3rem;
       padding: 1rem 0 2rem 0 ;
@@ -203,6 +255,11 @@ export default class Entry extends Vue {
 }
 .theme--dark.v-card > .v-card__text{
   color: white;
+}
+
+.dateRangeTag {
+  overflow: visible !important;
+  font-size: 18px !important;
 }
 /* .editorDiv {
   border: 1px solid #ccc;

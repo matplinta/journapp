@@ -55,6 +55,18 @@ export const actions = {
             const errorObj: AxiosError = error as AxiosError
             await dispatchCheckApiError(context, errorObj);
         }
+    },
+    async actionDeleteUser(context: MainContext, payload: number) {
+        try {
+            const loadingNotification = { content: 'deleting user', showProgress: true };
+            commitAddNotification(context, loadingNotification);
+            const response = await api.deleteUser(context.rootState.main.token, payload);
+            commitRemoveNotification(context, loadingNotification);
+            commitAddNotification(context, { content: 'User successfully deleted', color: 'success' });
+        } catch (error) {
+            const errorObj: AxiosError = error as AxiosError
+            await dispatchCheckApiError(context, errorObj);
+        }
     }
 };
 
@@ -63,3 +75,4 @@ const { dispatch } = getStoreAccessors<AdminState, State>('');
 export const dispatchCreateUser = dispatch(actions.actionCreateUser);
 export const dispatchGetUsers = dispatch(actions.actionGetUsers);
 export const dispatchUpdateUser = dispatch(actions.actionUpdateUser);
+export const dispatchDeleteUser = dispatch(actions.actionDeleteUser);

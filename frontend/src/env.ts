@@ -12,6 +12,15 @@ if (env === 'production') {
 
 export const apiUrl = envApiUrl;
 export const appName = process.env.VUE_APP_NAME;
+export const eventColors = [
+  'blue', 
+  'purple accent-3', 
+  'green accent-3', 
+  'amber', 
+  'teal', 
+  'indigo accent-3', 
+  'red accent-3'
+]
 
 export const tinyMCEApiKey = 'h6k9dn8akv57heejam9a6taac89mgo3qid2kebu3dr9j3d3s'
 export const tinyMCEOptions = {
