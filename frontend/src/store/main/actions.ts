@@ -1,4 +1,5 @@
 import { api } from '@/api';
+import { IUserProfileCreate } from '@/interfaces';
 import router from '@/router';
 import { getLocalToken, removeLocalToken, saveLocalToken } from '@/utils';
 import { AxiosError } from 'axios';
@@ -10,6 +11,7 @@ import {
     commitRemoveNotification,
     commitSetLoggedIn,
     commitSetLogInError,
+    commitSetRegisterError,
     commitSetToken,
     commitSetUserProfile,
     commitToggleTheme,
@@ -157,6 +159,40 @@ export const actions = {
             commitAddNotification(context, { color: 'error', content: 'Error resetting password' });
         }
     },
+    async actionCreateUserOpen(context: MainContext, payload: IUserProfileCreate) {
+        try {
+            const loadingNotification = { content: 'saving', showProgress: true };
+            commitAddNotification(context, loadingNotification);
+            const response = await api.createUserOpen(payload);
+            commitRemoveNotification(context, loadingNotification);
+            commitAddNotification(context, { content: 'User successfully created', color: 'success' });
+            
+        } catch (error) {
+            const errorObj: AxiosError = error as AxiosError
+            if (errorObj.response?.status === 400) {
+                if ('detail' in errorObj.response.data) {
+                    if (errorObj.response.data.detail === "The user with this username already exists in the system")
+                    {
+                        commitSetRegisterError(context, true)
+                    }
+                }
+            }
+            await dispatchCheckApiError(context, errorObj);
+        }
+        
+    },
+    async activateAccount(context: MainContext, payload: string) {
+        const loadingNotification = { content: 'Activating account', showProgress: true };
+        try {
+            commitAddNotification(context, loadingNotification);
+            const response = await api.activateAccount(payload);
+            commitRemoveNotification(context, loadingNotification);
+            commitAddNotification(context, { content: 'Account successfully activated', color: 'success' });
+        } catch (error) {
+            commitRemoveNotification(context, loadingNotification);
+            commitAddNotification(context, { color: 'error', content: 'Error activating account!' });
+        }
+    },
     async actionToggleTheme(context: MainContext) {
         commitToggleTheme(context)
     },
@@ -177,4 +213,6 @@ export const dispatchUpdateUserProfile = dispatch(actions.actionUpdateUserProfil
 export const dispatchRemoveNotification = dispatch(actions.removeNotification);
 export const dispatchPasswordRecovery = dispatch(actions.passwordRecovery);
 export const dispatchResetPassword = dispatch(actions.resetPassword);
+export const dispatchActivateAccount = dispatch(actions.activateAccount);
+export const dispatchCreateUserOpen = dispatch(actions.actionCreateUserOpen);
 export const dispatchToggleTheme = dispatch(actions.actionToggleTheme);

@@ -3,7 +3,7 @@
   color="">
     <div
     class="mx-15 my-4">
-      <h1>My entries</h1>
+      <h1>My favourites</h1>
     </div>
     <v-card
     elevation="4"
@@ -17,7 +17,7 @@
       absolute
       icon
       depressed
-      @click="toggleFavouriteEntry(entry)"
+      @click="removeFavouriteEntry(entry)"
       > 
         <v-icon
           v-if="!entry.favourite"
@@ -80,7 +80,7 @@ import { INoteListed, INotePartialUpdate } from '@/interfaces';
 export default class Entries extends Vue {
 
   get entries(){
-    return readNotes(this.$store)
+    return readNotes(this.$store).filter(entry => entry.favourite === true)
   }
 
   get greetedUser() {
@@ -100,14 +100,11 @@ export default class Entries extends Vue {
     
   }
 
-  public async toggleFavouriteEntry(note: INoteListed) {
+  public async removeFavouriteEntry(note: INoteListed) {
     const {id, ...noteToUpdate} = note
-    noteToUpdate.favourite = !noteToUpdate.favourite
+    noteToUpdate.favourite = false
     await actionPartialUpdateNote(this.$store, {id: note.id, note: noteToUpdate})
-    const idx = this.entries.findIndex(x => x.id === note.id)
-    note.favourite = noteToUpdate.favourite 
-    this.$set(this.entries, idx, note)
-    
+    note.favourite = false
   }
 }
 </script>

@@ -6,7 +6,7 @@ from typing import Any, Dict, Optional
 import emails
 from emails.template import JinjaTemplate
 from jose import jwt
-
+from app.core.security import ExpiringActivateTokenGenerator
 from app.core.config import settings
 
 
@@ -69,12 +69,17 @@ def send_reset_password_email(email_to: str, email: str, token: str) -> None:
     )
 
 
-def send_new_account_email(email_to: str, username: str, password: str) -> None:
+def send_new_account_email(email_to: str, username: str, user_id: int) -> None:
     project_name = settings.PROJECT_NAME
     subject = f"{project_name} - New account for user {username}"
+
+    token_generator = ExpiringActivateTokenGenerator()
+    activation_token = token_generator.generate_token(str(user_id))
+    activation_link = f"{settings.SERVER_HOST}/activate?token={activation_token}"
+    print(activation_link)
+
     with open(Path(settings.EMAIL_TEMPLATES_DIR) / "new_account.html") as f:
         template_str = f.read()
-    link = settings.SERVER_HOST
     send_email(
         email_to=email_to,
         subject_template=subject,
@@ -82,9 +87,8 @@ def send_new_account_email(email_to: str, username: str, password: str) -> None:
         environment={
             "project_name": settings.PROJECT_NAME,
             "username": username,
-            "password": password,
+            "activation_link": activation_link,
             "email": email_to,
-            "link": link,
         },
     )
 
@@ -106,3 +110,10 @@ def verify_password_reset_token(token: str) -> Optional[str]:
         return decoded_token["email"]
     except jwt.JWTError:
         return None
+
+def verify_activate_account_token(token: str) -> Optional[int]:
+    token_generator = ExpiringActivateTokenGenerator()
+    if token_generator.is_valid_token(token):
+        user_id = token_generator.get_token_value(token)
+        return int(user_id)
+    return None

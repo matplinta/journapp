@@ -65,11 +65,17 @@
       </v-card-text>
       <v-card-text v-else>
         <div class="d-flex flex-row mb-6">
-          <div class="date_container accent text-center rounded-lg py-1 px-4">
-            <span class="accent--text text--darken-3 font-weight-regular subtitle-1">
+          <v-chip
+            class="dateRangeTag py-5"
+            color="accent"
+            text-color="accent darken-4"
+            ripple
+            label>
+            <v-icon left>
+              mdi-calendar-range
+            </v-icon>
               {{date_range}}
-            </span>
-          </div>
+            </v-chip>
         </div>
       </v-card-text>
     </v-card>

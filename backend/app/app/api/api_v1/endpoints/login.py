@@ -1,3 +1,4 @@
+from asyncio.log import logger
 from datetime import timedelta
 from typing import Any
 
@@ -13,8 +14,10 @@ from app.core.security import get_password_hash
 from app.utils import (
     generate_password_reset_token,
     send_reset_password_email,
+    verify_activate_account_token,
     verify_password_reset_token,
 )
+from app.core.security import ExpiringActivateTokenGenerator
 
 router = APIRouter()
 
@@ -94,3 +97,28 @@ def reset_password(
     db.add(user)
     db.commit()
     return {"msg": "Password updated successfully"}
+
+
+@router.post("/activate-account/", response_model=schemas.Msg)
+def activate_account(
+    token: str = Body(..., embed=True),
+    db: Session = Depends(deps.get_db),
+) -> Any:
+    """
+    Activate user's account
+    """
+    user_id = verify_activate_account_token(token)
+    if not user_id:
+        raise HTTPException(status_code=400, detail="Invalid token")
+    user = crud.user.get(db, user_id)
+    if not user:
+        raise HTTPException(
+            status_code=404,
+            detail="The user with this username does not exist in the system.",
+        )
+    elif crud.user.is_active(user):
+        raise HTTPException(status_code=400, detail="User already active")
+    user.is_active = True
+    db.add(user)
+    db.commit()
+    return {"msg": "User account activated successfully"}

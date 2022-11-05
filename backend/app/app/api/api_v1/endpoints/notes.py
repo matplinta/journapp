@@ -63,6 +63,21 @@ def read_notes_listing(
     return notes
 
 
+@router.get("/listing/favourites", response_model=List[schemas.NoteListed])
+def read_notes_listing_favourites(
+    db: Session = Depends(deps.get_db),
+    skip: int = 0,
+    limit: int = 100,
+    current_user: models.User = Depends(deps.get_current_active_user),
+) -> Any:
+    """
+    Retrieve notes.
+    """
+    return crud.note.get_multi_favourites_by_author(
+        db=db, author_id=current_user.id, skip=skip, limit=limit
+    )
+
+
 @router.get("/by_date", response_model=List[schemas.Note])
 def read_notes_by_date(
     db: Session = Depends(deps.get_db),

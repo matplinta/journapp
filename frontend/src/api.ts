@@ -35,6 +35,9 @@ export const api = {
   async createUser(token: string, data: IUserProfileCreate) {
     return axios.post(`${apiUrl}/api/v1/users/`, data, authHeaders(token));
   },
+  async createUserOpen(data: IUserProfileCreate) {
+    return axios.post(`${apiUrl}/api/v1/users/open`, data);
+  },
   async deleteUser(token: string, userId: number) {
     return axios.delete(`${apiUrl}/api/v1/users/${userId}`, authHeaders(token));
   },
@@ -44,6 +47,11 @@ export const api = {
   async resetPassword(password: string, token: string) {
     return axios.post(`${apiUrl}/api/v1/reset-password/`, {
       new_password: password,
+      token,
+    });
+  },
+  async activateAccount(token: string) {
+    return axios.post(`${apiUrl}/api/v1/activate-account/`, {
       token,
     });
   },
@@ -70,7 +78,6 @@ export const api = {
     params.append('start_date', convertToString(firstDay));
     params.append('end_date', convertToString(lastDay));
 
-    console.log({...authHeaders(token), params: params})
     return axios.get<INoteListed[]>(`${apiUrl}/api/v1/notes/listing/by_date/`, {...authHeaders(token), params: params});
   },
 

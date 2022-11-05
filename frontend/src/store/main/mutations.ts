@@ -14,6 +14,9 @@ export const mutations = {
     setLogInError(state: MainState, payload: boolean) {
         state.logInError = payload;
     },
+    setRegisterError(state: MainState, payload: boolean) {
+        state.registerError = payload;
+    },
     setUserProfile(state: MainState, payload: IUserProfile) {
         state.userProfile = payload;
     },
@@ -40,6 +43,7 @@ const {commit} = getStoreAccessors<MainState | any, State>('');
 export const commitSetDashboardShowDrawer = commit(mutations.setDashboardShowDrawer);
 export const commitSetLoggedIn = commit(mutations.setLoggedIn);
 export const commitSetLogInError = commit(mutations.setLogInError);
+export const commitSetRegisterError = commit(mutations.setRegisterError);
 export const commitSetToken = commit(mutations.setToken);
 export const commitSetUserProfile = commit(mutations.setUserProfile);
 export const commitAddNotification = commit(mutations.addNotification);

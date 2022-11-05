@@ -33,6 +33,10 @@ export default new Router({
           component: () => import(/* webpackChunkName: "reset-password" */ './views/ResetPassword.vue'),
         },
         {
+          path: 'activate',
+          component: () => import(/* webpackChunkName: "reset-password" */ './views/ActivateAccount.vue'),
+        },
+        {
           path: 'welcome',
           component: () => import(/* webpackChunkName: "reset-password" */ './views/Welcome.vue'),
         },
@@ -56,6 +60,11 @@ export default new Router({
               path: 'entries',
               name: 'entries',
               component: () => import(/* webpackChunkName: "main-entries" */ './views/main/Entries.vue'),
+            },
+            {
+              path: 'favourites',
+              name: 'favourites',
+              component: () => import(/* webpackChunkName: "main-entries" */ './views/main/Favourites.vue'),
             },
             {
               path: 'profile',

@@ -73,6 +73,19 @@ class CRUDNote(CRUDBase[Note, NoteCreate, NoteUpdate]):
         )
 
 
+    def get_multi_favourites_by_author(
+        self, db: Session, *, author_id: int, skip: int = 0, limit: int = 100
+    ) -> List[Note]:
+        return (
+            db.query(self.model)
+            .filter(Note.author_id == author_id)
+            .filter(Note.favourite == True)
+            .offset(skip)
+            .limit(limit)
+            .all()
+        )
+
+
     def get_multi_by_author_and_tags(
         self, db: Session, *, author_id: int, tags: list[str], skip: int = 0, limit: int = 100
     ) -> List[Note]:

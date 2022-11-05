@@ -9,6 +9,7 @@ export const getters = {
             state.userProfile.is_superuser && state.userProfile.is_active);
     },
     loginError: (state: MainState) => state.logInError,
+    registerError: (state: MainState) => state.registerError,
     dashboardShowDrawer: (state: MainState) => state.dashboardShowDrawer,
     userProfile: (state: MainState) => state.userProfile,
     token: (state: MainState) => state.token,
@@ -23,6 +24,7 @@ export const readDashboardShowDrawer = read(getters.dashboardShowDrawer);
 export const readHasAdminAccess = read(getters.hasAdminAccess);
 export const readIsLoggedIn = read(getters.isLoggedIn);
 export const readLoginError = read(getters.loginError);
+export const readRegisterError = read(getters.registerError);
 export const readToken = read(getters.token);
 export const readUserProfile = read(getters.userProfile);
 export const readFirstNotification = read(getters.firstNotification);

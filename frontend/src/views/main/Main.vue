@@ -91,6 +91,14 @@
               <v-list-item-title>All entries</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
+          <v-list-item to="/main/favourites">
+            <v-list-item-action>
+              <v-icon color="yellow darken-3">mdi-star</v-icon>
+            </v-list-item-action>
+            <v-list-item-content>
+              <v-list-item-title>Favourites</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
         </v-list>
         <v-divider></v-divider>
         <v-list subheader v-show="hasAdminAccess">
@@ -298,18 +306,18 @@ export default class Main extends Vue {
 .calendar_item {
   padding: 0  
 }
-/* .v-navigation-drawer{
+.v-navigation-drawer{
   background-color: var(--v-background-base) !important;
-}  */
+} 
+#pickerId, .theme--light.v-picker__body{
+  background-color: inherit !important;
+}
 .theme--dark.v-navigation-drawer{
   background-color: var(--v-background-base) !important;
 }
 #pickerId, .theme--dark.v-picker__body{
   background-color: inherit !important;
 }
-/* #pickerId, .theme--light.v-picker__body{
-  background-color: inherit !important;
-} */
 
 
 </style>

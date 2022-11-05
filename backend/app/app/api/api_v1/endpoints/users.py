@@ -31,12 +31,6 @@ def read_users(
     return users
 
 
-@router.get("/testmail")
-def sendtestmail():
-    send_test_email("mateusz.plinta@yahoo.com")
-    return None
-
-
 @router.post("/", response_model=schemas.User)
 def create_user(
     *,
@@ -54,10 +48,10 @@ def create_user(
             detail="The user with this username already exists in the system.",
         )
     user = crud.user.create(db, obj_in=user_in)
-    if settings.EMAILS_ENABLED and user_in.email:
-        send_new_account_email(
-            email_to=user_in.email, username=user_in.email, password=user_in.password
-        )
+    # if settings.EMAILS_ENABLED and user_in.email:
+    #     send_new_account_email(
+    #         email_to=user_in.email, username=user_in.email, user_id=user.id
+    #     )
     return user
 
 
@@ -118,8 +112,12 @@ def create_user_open(
             status_code=400,
             detail="The user with this username already exists in the system",
         )
-    user_in = schemas.UserCreate(password=password, email=email, full_name=full_name)
+    user_in = schemas.UserCreate(password=password, email=email, full_name=full_name, is_active=False)
     user = crud.user.create(db, obj_in=user_in)
+    if settings.EMAILS_ENABLED and user_in.email:
+        send_new_account_email(
+            email_to=user_in.email, username=user_in.email, user_id=user.id
+        )
     return user
 
 

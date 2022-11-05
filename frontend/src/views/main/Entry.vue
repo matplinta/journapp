@@ -27,7 +27,7 @@
             outlined
             placeholder="Note tags..."
             label="Note tags..."
-            color="secondary"
+            color="indigo lighten-2"
             dense
           >
             <template v-slot:selection="{ attrs, item, select, selected }">
@@ -36,7 +36,7 @@
                 :input-value="selected"
                 close
                 dark
-                color="secondary"
+                color="indigo lighten-2"
                 @click="select"
                 @click:close="removeTag(item)"
                
@@ -99,9 +99,8 @@
           <div>
             <v-btn 
             @click="save"
-            color="green"
+            color="primary"
             dark
-            text
             depressed
             >Save</v-btn>
           </div>
