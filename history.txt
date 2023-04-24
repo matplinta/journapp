@@ -1,0 +1,340 @@
+    1  ls
+    2  cd journapp/
+    3  docker-compose ps
+    4  docker-compose logs backend
+    5  git pull
+    6  docker-compose logs backend
+    7  cd journapp/
+    8  docker-compose ps
+    9  vim .env 
+   10  docker-compose ps
+   11  docker-compose logs backend
+   12  cat .env
+   13  vim .env
+   14  docker-compose logs backend
+   15  docker-compose ps
+   16  vim frontend/.env 
+   17  docker-compose ps
+   18  ls
+   19  yum install git docker htop 
+   20  sudo yum install git docker htop 
+   21  sudo curl -L https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+   22  sudo chmod +x /usr/local/bin/docker-compose
+   23  docker-compose version
+   24  git clone sudo curl -L https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+   25  sudo chmod +x /usr/local/bin/docker-compose
+   26  git clone https://github.com/matplinta/journapp.git
+   27  cd journapp/
+   28  git checkout figuring_out_traefic 
+   29  docker-compose build
+   30  sudo usermod -a -G docker ec2-user
+   31  id ec2-user
+   32  newgrp docker
+   33  sudo systemctl enable docker.service
+   34  sudo systemctl start docker.service
+   35  cat docker-compose.yml 
+   36  docker-compose build
+   37  docker-compose ps
+   38  docker images
+   39  docker-compose up
+   40  docker-compose build
+   41  docker-compose up
+   42  docker-compose up --build
+   43  vim .env 
+   44  docker-compose up --build
+   45  vim .env 
+   46  docker-compose up --build
+   47  vim .env 
+   48  docker-compose up --build
+   49  vim .env 
+   50  docker-compose up --build
+   51  vim .env 
+   52  docker-compose up --build
+   53  vim .env 
+   54  docker-compose up --build
+   55  vim .env
+   56  vim frontend/.env 
+   57  docker-compose up --build
+   58  git status
+   59  git diff
+   60  vim .env 
+   61  git checkout -b working_aws_ec2
+   62  git status
+   63  git add .
+   64  git commit -m "working with journapp.net domain"
+   65  git push 
+   66  git push --set-upstream origin working_aws_ec2
+   67  ls
+   68  cd journapp/
+   69  ls
+   70  history
+   71  docker-compose up --build
+   72  DOMAIN=ec2-18-184-213-216.eu-central-1.compute.amazonaws.com docker-compose up
+   73  pg_isready
+   74  psql 
+   75  cd /usr/pgsql-11/bin
+   76  exit
+   77  k if the Idle session was killed?
+   78  pg_isready -d database -h journapp-db.czfrtruawbyc.eu-central-1.rds.amazonaws.com -p 5432 -U postgres
+   79  sudo apt update
+   80  sudo yum update
+   81  yum install pg_isready
+   82  sudo yum install pg_isready
+   83  sudo yum install postgresql-client
+   84  yum install postgresql-upgrade
+   85  sudo yum install postgresql-upgrade
+   86  pg_isready -d database -h journapp-db.czfrtruawbyc.eu-central-1.rds.amazonaws.com -p 5432 -U postgres
+   87  bash
+   88  psql -d database -h journapp-db.czfrtruawbyc.eu-central-1.rds.amazonaws.com -p 5432 -U postgres
+   89  sudo amazon-linux-extras enable postgresql14
+   90  sudo yum install posgtresql
+   91  sudo yum install postgresql-server -y
+   92  psql -d database -h journapp-db.czfrtruawbyc.eu-central-1.rds.amazonaws.com -p 5432 -U postgres
+   93  man psql
+   94  psql -d journapp-db -h journapp-db.czfrtruawbyc.eu-central-1.rds.amazonaws.com -p 5432 -U postgres
+   95  psql -d journapp_db -h journapp-db.czfrtruawbyc.eu-central-1.rds.amazonaws.com -p 5432 -U postgres
+   96  netrw
+   97  sudo yum list
+   98  sudo yum list | grep nodejs
+   99  echo ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCjk3VvG8pDIsS3swCMPFI3IQnfHfd/O7vA6zoXa55CaOng/Ij42u1w5NHnG4jGBVzL6ysiHu+hdly3PgF/D3jG/PxmVbwL+YkDr7L+6tpRBMHgWnJY4SaAmPjs4qQ3xHZpq6R1Vmm/OEmOVy0ODTLqFlrec1+7E5Ma7hc4II3080nfPtVin5wyxt8LArus1RmO8IdApHWgsgwnR48I5uRmP6eozgKpw4i2dQVDlsIXUDyj6AgJoLmruzOffVPC9EJF3B2rKD9nsKkUptCEr4ZTiq/irk4oK7wSk1GXn/MsTXp5w+gzhse6LxUXZnc34eC6PKDenVS1uGTNMTSf60O2rjv3M0q15T89JZ2Dq8H99Ehcz+BJgbsp8vk1lENXFEqBfj3w/seMlXlkQrjBNytP7CnpWZTEs9iqG3Tq0fGSVPjXbCPNZk0Wt81msOBxP2g7SZtIkNumvWWUzmnrtTFFUUsnh9eWStsz6BVuztGN5kmnHpqv8VWu/JhByGngUEOAbnbuEIBfUNJV/7Q24HpTNy507IXdQwFYsisD44njfyNebOyG9KV9mgr+DYWA3gez7XCtOdYFumitysXs7SdeMoUAM8aplUk6JDtz8ChG0U2huwDDVggyNYvtoiuG1DhFg0Z78/gudXmHS7e4bJHDzc++AOrf2hqZ/7n0lonx2Q== root+899756333999@cloud9.amazon.com >> ~/.ssh/authorized_keys
+  100  node
+  101  nodejs
+  102  npm
+  103  curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
+  104  . ~/.nvm/nvm.sh
+  105  nvm install --lts
+  106  node -e "console.log('Running Node.js ' + process.version)"
+  107  nvm install 16
+  108  node -e "console.log('Running Node.js ' + process.version)"
+  109  ls
+  110  cd journapp/
+  111  ls
+  112  ls passwords.txt 
+  113  cat passwords.txt 
+  114  ll
+  115  ll backend/
+  116  ls -lah
+  117  cat .env
+  118  docker-compose down
+  119  htop
+  120  git status
+  121  cd journapp/
+  122  git status
+  123  ping google.com
+  124  ping 8.8.8.8
+  125  wget google.com
+  126  curl -sSL https:/google.com
+  127  man curl
+  128  ping google.com
+  129  docker-compose ps
+  130  cat .env 
+  131  vim .env
+  132  ip a
+  133  docker ps
+  134  docker-compose exec frontend
+  135  docker-compose exec frontend bash
+  136  docker-compose exec backend bash
+  137  htio
+  138  htop
+  139  ls
+  140  git status
+  141  git add .
+  142  zsh
+  143  git branch
+  144  git checkout -b working_aws_ec2_external_db
+  145  git status
+  146  git commit -m "add external db connection"
+  147  git push -u origin working_aws_ec2_external_db
+  148  cd journapp/
+  149  vim .env 
+  150  docker-compose up --build
+  151  vim docker-compose.yml 
+  152  docker-compose up --build
+  153  docker-compose ps
+  154  ls
+  155  docker-compose up --build -d
+  156  docker-compose logs
+  157  docker-compose logs
+  158  cd journapp/
+  159  docker-compose logs
+  160  docker-compose ps
+  161  docker-compose logs journapp-proxy
+  162  docker-compose logs proxy
+  163  docker-compose logs backend
+  164  psql -d journapp_db -h journapp-db.czfrtruawbyc.eu-central-1.rds.amazonaws.com -p 5432 -U postgres
+  165  docker-compose down
+  166  docker-compose up -d
+  167  docker swarm
+  168  hostname
+  169  docker-compose down
+  170  CNAME 
+  171  sudo hostnamectl set-hostname journapp.net
+  172  sudo reboot
+  173  hostname
+  174  docker network create --driver=overlay traefik-public
+  175  docker swarm init
+  176  docker node ls
+  177  docker network create --driver=overlay traefik-public
+  178  export NODE_ID=$(docker info -f '{{.Swarm.NodeID}}')
+  179  docker node update --label-add traefik-public.traefik-public-certificates=true $NODE_ID
+  180  export TRAEFIK_EMAIL=matplinta@gmail.com
+  181  export TRAEFIK_USERNAME=admin
+  182  export TRAEFIK_PASSWORD=tisma
+  183  export BASE_DOMAIN=journapp.net
+  184  export USE_HOSTNAME=$BASE_DOMAIN
+  185  export EMAIL=$TRAEFIK_EMAIL
+  186  export DOMAIN=traefik.$ENV_NAME_SHORT.$BASE_DOMAIN
+  187  export USERNAME=$TRAEFIK_USERNAME
+  188  export PASSWORD=$TRAEFIK_PASSWORD
+  189  export DOMAIN=traefik.$BASE_DOMAIN
+  190  export HASHED_PASSWORD=$(openssl passwd -apr1 $PASSWORD)
+  191  curl -L dockerswarm.rocks/traefik.yml -o traefik.yml
+  192  docker stack deploy -c traefik.yml traefik
+  193  docker stack ps traefik
+  194  pip3 install docker-auto-labels
+  195  export DOMAIN=$BASE_DOMAIN
+  196  export FRONTEND_ENV=prod
+  197  bash scripts/build.sh
+  198  cd journapp/
+  199  bash scripts/build.sh
+  200  export TAG=latest
+  201  bash scripts/build.sh
+  202  docker stack ps traefik
+  203  docker stack ps
+  204  docker ps
+  205  docker stack ls
+  206  docker stack ps traefic
+  207  docker stack ps traefik
+  208  docker-compose ps
+  209  env
+  210  export TRAEFIK_TAG=prod.$BASE_DOMAIN
+  211  export STACK_NAME=prod-$BASE_NAME
+  212  bash scripts/deploy.sh
+  213  docker service logs traefik_traefik -f
+  214  bash scripts/deploy.sh
+  215   pip install PyYAML==3.13
+  216   pip3 install PyYAML==3.13
+  217  bash scripts/deploy.sh
+  218  docker service logs traefik_traefik -f
+  219  bash scripts/deploy.sh
+  220  pip3 install docker-auto-labels
+  221  bash scripts/deploy.sh
+  222  docker-auto-labels docker-stack.yml
+  223  docker stack deploy -c docker-stack.yml --with-registry-auth "${STACK_NAME?Variable not set}"
+  224  docker service update
+  225  docker service ps
+  226  docker service ls
+  227  docker stack services
+  228  docker stack services traefik_traefik
+  229  env
+  230  docker stack 
+  231  docker stack  rm
+  232  docker stack  rm traefik_traefik
+  233  docker stack ps
+  234  docker stack ls
+  235  docker stack services traefik
+  236  docker stack  rm traefic
+  237  docker stack rm
+  238  docker stack ls
+  239  docker stack 
+  240  docker stack ls
+  241  docker stack rm 1
+  242  docker stack rm traefik
+  243  export BASE_DOMAIN=journapp.net
+  244  export BASE_NAME=journapp-net
+  245  export ENV_NAME_SHORT=stag
+  246  export ENV_NAME_LONG=staging
+  247  echo $TRAEFIK_USERNAME
+  248  echo $TRAEFIK_PASSWORD $TRAEFIK_EMAIL
+  249  export USE_HOSTNAME=$ENV_NAME_SHORT.$BASE_DOMAIN
+  250  hostname --help
+  251  echo $USE_HOSTNAME > /etc/hostname
+  252  sudo echo $USE_HOSTNAME > /etc/hostname
+  253  docker swarm init
+  254  docker swarm leave
+  255  docker swarm leave --force
+  256  sudo hostnamectl set-hostname $USE_HOSTNAME
+  257  hostname
+  258  cat /etc/hostname 
+  259  docker swarm init
+  260  docker node ls
+  261  docker network create --driver=overlay traefik-public
+  262  export NODE_ID=$(docker info -f '{{.Swarm.NodeID}}')
+  263  docker node update --label-add traefik-public.traefik-public-certificates=true $NODE_ID
+  264  export EMAIL=$TRAEFIK_EMAIL
+  265  export DOMAIN=traefik.$ENV_NAME_SHORT.$BASE_DOMAIN
+  266  export USERNAME=$TRAEFIK_USERNAME
+  267  export PASSWORD=$TRAEFIK_PASSWORD
+  268  export HASHED_PASSWORD=$(openssl passwd -apr1 $PASSWORD)
+  269  curl -L dockerswarm.rocks/traefik.yml -o traefik.yml
+  270  docker stack deploy -c traefik.yml traefik
+  271  docker stack ps traefik
+  272  export TAG=$ENV_NAME_SHORT
+  273  export DOMAIN=$ENV_NAME_SHORT.$BASE_DOMAIN
+  274  export FRONTEND_ENV=$ENV_NAME_LONG
+  275  bash scripts/build.sh
+  276  export TRAEFIK_TAG=$ENV_NAME_SHORT.$BASE_DOMAIN
+  277  export STACK_NAME=$ENV_NAME_SHORT-$BASE_NAME
+  278  bash scripts/deploy.sh
+  279  docker service logs traefik_traefik -f
+  280  docker stack rm traefik
+  281  docker swarm rm
+  282  docker swarm leave --force
+  283  docker swarm init
+  284  sudo reboot
+  285  hostname
+  286  sudo hostnamectl set-hostname journapp.net
+  287  sudo reboot
+  288  hostname
+  289  export BASE_DOMAIN=journapp.net
+  290  export BASE_NAME=journapp-net
+  291  export TRAEFIK_USERNAME=admin
+  292  export TRAEFIK_PASSWORD=tisma
+  293  export TRAEFIK_EMAIL=matplinta@gmail.com
+  294  docker swarm init
+  295  docker swarm leave --force
+  296  docker swarm init
+  297  docker node ls
+  298  docker network create --driver=overlay traefik-public
+  299  export NODE_ID=$(docker info -f '{{.Swarm.NodeID}}')
+  300  docker node update --label-add traefik-public.traefik-public-certificates=true $NODE_ID
+  301  export EMAIL=$TRAEFIK_EMAIL
+  302  export DOMAIN=traefik.$BASE_DOMAIN
+  303  echo $DOMAIN
+  304  export USERNAME=$TRAEFIK_USERNAME
+  305  export PASSWORD=$TRAEFIK_PASSWORD
+  306  export HASHED_PASSWORD=$(openssl passwd -apr1 $PASSWORD)
+  307  curl -L dockerswarm.rocks/traefik.yml -o traefik.yml
+  308  cd journapp/
+  309  curl -L dockerswarm.rocks/traefik.yml -o traefik.yml
+  310  docker stack deploy -c traefik.yml traefik
+  311  docker stack ps traefik
+  312  export DOMAIN=$BASE_DOMAIN
+  313  echo $DOMAIN
+  314  export TAG=latest
+  315  export TRAEFIK_TAG=journapp.net
+  316  echo $DOMAIN
+  317  export STACK_NAME=journapp-net
+  318  bash scripts/deploy.sh
+  319  pwd
+  320  bash scripts/deploy.sh
+  321  docker-auto-labels docker-stack.yml
+  322  docker stack deploy -c docker-stack.yml --with-registry-auth "${STACK_NAME?Variable not set}"
+  323  echo $STACK_NAME
+  324  docker stack deploy -c docker-stack.yml --with-registry-auth "${STACK_NAME?Variable not set}"
+  325  docker service logs traefik_traefik -f
+  326  echo $TAG
+  327  bash scripts/build.sh
+  328  bash scripts/deploy.sh
+  329  docker stack deploy -c docker-stack.yml --with-registry-auth "${STACK_NAME?Variable not set}"
+  330  docker service update --force journapp-net_frontend -d
+  331  docker service logs traefik_traefik -f
+  332  bash scripts/build.sh
+  333  docker stack deploy -c docker-stack.yml --with-registry-auth "${STACK_NAME?Variable not set}"
+  334  docker service update --force journapp-net_frontend -d
+  335  bash scripts/build.sh
+  336  docker stack deploy -c docker-stack.yml --with-registry-auth "${STACK_NAME?Variable not set}"
+  337  docker service update --force journapp-net_frontend -d
+  338  htop
+  339  history
+  340  history > history.txt

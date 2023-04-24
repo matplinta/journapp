@@ -77,8 +77,10 @@ export const api = {
     const params = new URLSearchParams();
     params.append('start_date', convertToString(firstDay));
     params.append('end_date', convertToString(lastDay));
+    let start_date = convertToString(firstDay);
+    let end_date =  convertToString(lastDay);
 
-    return axios.get<INoteListed[]>(`${apiUrl}/api/v1/notes/listing/by_date/`, {...authHeaders(token), params: params});
+    return axios.get<INoteListed[]>(`${apiUrl}/api/v1/notes/listing/by_date?start_date=${start_date}&end_date=${end_date}`, authHeaders(token));
   },
 
   
